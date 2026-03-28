@@ -1,0 +1,9 @@
+Quick vpn client change for asus-wrt
+Using openbot ssh client post login automation
+
+HOW TO USE:
+- ssh to router and dump current vpn director file
+- # cat /jffs/openvpn/vpndirector_rulelist
+- copy and paste full command (including 2 blank lines at the end) replacing your vpndirector file with mine
+- to change vpn client, simply modify the file accordingly for which VPN you want to use for each location
+
