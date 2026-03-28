@@ -3,13 +3,13 @@
 - Written to remove need to login via GUI and constantly change VPN client for devices
 
 HOW TO USE:
-- enable ssh on asus-wrt (suggested different port and local access only)
-- ssh to router and dump current vpn director file
+- Enable ssh on asus-wrt (suggested different port and local access only)
+- SSH to router and dump current vpn director file
 - # cat /jffs/openvpn/vpndirector_rulelist
 - Replace below one-liner with your vpndirector file.
 - Paste whole one-liner into connectbot post login automation box. (note, the exit command is optional) 
-- to change vpn client, simply modify the post automation one-liner accordingly for which VPN you want to use for each location. Save and connect. 
-
+- To change vpn client, simply modify the post automation one-liner accordingly for which VPN you want to use for each location. Save and connect. 
+- Device in vpn director will use either: WAN, VPN1, VPN2, VPN3, VPN4, VPN5
 EXAMPLE:
 # cat /jffs/openvpn/vpndirector_rulelist
 
