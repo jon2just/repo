@@ -1,0 +1,5 @@
+echo "VPN1 - Lon \n VPN2 - Ten \n VPN3 - US \n VPN4 - Gsc \n VPN5 -  Ga \n" 
+
+echo "<1>WORK>192.168.50.160>>WAN<1>PIXEL3>192.168.50.125>>OVPN2<1>BED>192.168.50.139>>OVPN2<1>PIXEL5>192.168.50.6>>OVPN3<1>LR>192.168.50.141>>OVPN4<1>ONN>192.168.50.115>>OVPN4<1>DELL>192.168.50.243>>OVPN5" > /jffs/openvpn/vpndirector_rulelist && service restart_vpnrouting && exit
+
+
