@@ -1,8 +1,9 @@
-### Openvpn quick client change for asus-wrt ###
+### ABOUT ###
+- Openvpn quick client change for asus-wrt ###
 - Using openbot ssh client post login automation
 - Written to remove need to login via GUI and constantly change VPN client for devices
 
-HOW TO USE:
+### HOW TO USE ###
 - Enable ssh on asus-wrt (suggested different port and local access only)
 - SSH to router and dump current vpn director file
 - # cat /jffs/openvpn/vpndirector_rulelist
@@ -10,13 +11,13 @@ HOW TO USE:
 - Paste whole one-liner into connectbot post login automation box. (note, the exit command is optional) 
 - To change vpn client, simply modify the post automation one-liner accordingly for which VPN you want to use for each location. Save and connect. 
 - Device in vpn director will use either: WAN, VPN1, VPN2, VPN3, VPN4, VPN5
-EXAMPLE:
+- Two line breaks must be after your command or connectbot wont execute the command
+### EXAMPLE ###
 # cat /jffs/openvpn/vpndirector_rulelist
-
 <1>WORK>192.168.50.160>>WAN<1>PIXEL3>192.168.50.125>>OVPN2<1>BED>192.168.50.139>>OVPN2<1>PIXEL5>192.168.50.6>>OVPN3<1>LR>192.168.50.141>>OVPN4<1>ONN>192.168.50.115>>OVPN4<1>DELL>192.168.50.243>>OVPN5
 
-
-EXAMPLE FULL ONELINER PASTED INTO CONNECTBOT: (first echo is just a fast glance of my vpn clients and locations. you do not need this)
+### FULL ONELINER PASTED INTO CONNECTBOT ###
+-Note: First echo is just a fast glance of my vpn clients and locations. You do not need this)
 
 echo "VPN1 - Lon \n VPN2 - Ten \n VPN3 - US \n VPN4 - Gsc \n VPN5 -  Ga \n"
 
