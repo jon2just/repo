@@ -1,0 +1,126 @@
+# MaxmindDB Installation: #
+
+Download and copy MMDB databases to /usr/share/GeoIP (Can pull latest db's from MM account) 
+Latest version of Maxmind DB (used below) https://github.com/maxmind/mod_maxminddb/releases
+
+# Install MaxmindDB #
+
+apt install libmaxminddb0 libmaxminddb-dev mmdb-bin
+apt install apache2-dev
+cd /root/
+wget https://github.com/maxmind/mod_maxminddb/releases/download/1.3.0/mod_maxminddb-1.3.0.tar.gz
+cd mod_maxminddb-1.3.0/
+ ./configure
+make install
+ systemctl restart apache2
+apachectl -M | grep maxminddb
+
+
+# Setup Apache Conf files #
+
+/etc/httpd/conf.d/maxminddb.conf
+
+<IfModule mod_maxminddb.c>
+    MaxMindDBEnable On
+ 
+    # GeoLite2 databases (provided by the RPM packages geolite2-country
+    # and geolite2-city) are free IP geolocation databases comparable to,
+    # but less accurate than, MaxMind's commercial GeoIP2 databases.
+    MaxMindDBFile COUNTRY_DB /usr/share/GeoIP/GeoLite2-Country.mmdb
+    MaxMindDBFile CITY_DB    /usr/share/GeoIP/GeoLite2-City.mmdb
+</IfModule>
+
+
+/etc/httpd/conf.d/mod_maxminddb.conf
+
+LoadModule maxminddb_module modules/mod_maxminddb.so
+ 
+<IfModule mod_maxminddb.c>
+  MaxMindDBEnable On
+ 
+  # Define your MaxMind DB files
+  # You can use any name (e.g., COUNTRY_DB, CITY_DB) to refer to the database in later directives
+  MaxMindDBFile COUNTRY_DB /usr/share/GeoIP/GeoLite2-Country.mmdb
+  MaxMindDBFile CITY_DB    /usr/share/GeoIP/GeoLite2-City.mmdb
+  MaxMindDBFile ASN_DB     /usr/share/GeoIP/GeoLite2-ASN.mmdb
+ 
+  # Map the desired lookup results to Apache environment variables
+  # The format is MaxMindDBEnv <EnvVarName> <DBName>/<path/to/data>
+ 
+  # For Country Code
+  MaxMindDBEnv COUNTRY_CODE COUNTRY_DB/country/iso_code
+  MaxMindDBEnv GEOIP_COUNTRY_CODE COUNTRY_DB/country/iso_code
+  MaxMindDBEnv COUNTRY_NAME CITY_DB/country/names/en
+ 
+  # For City Name (if using GeoLite2 City database)
+  MaxMindDBEnv CITY CITY_DB/city/names/en
+  MaxMindDBEnv CITY_NAME CITY_DB/city/names/en
+ 
+  # For Continent Code (if using GeoLite2 City database)
+  MaxMindDBEnv CONTINENT_CODE CITY_DB/continent/code
+ 
+  # Define a variable for the state
+  MaxMindDBEnv MM_STATE CITY_DB/subdivisions/0/iso_code
+ 
+  # For Autonomous System Number (ASN) (if using GeoLite2 ASN database)
+  MaxMindDBEnv ASN ASN_DB/autonomous_system_number
+ 
+  # For Autonomous System Organization (if using GeoLite2 ASN database)
+  MaxMindDBEnv ASORG ASN_DB/autonomous_system_organization
+ 
+  MaxMindDBEnv REGION_CODE CITY_DB/subdivisions/0/iso_code
+  MaxMindDBEnv GEOIP_REGION CITY_DB/subdivisions/0/iso_code
+  MaxMindDBEnv REGION_NAME CITY_DB/subdivisions/0/names/en
+  MaxMindDBEnv GEOIP_REGION_NAME CITY_DB/subdivisions/0/names/en
+ 
+  MaxMindDBEnv LONGITUDE CITY_DB/location/longitude
+  MaxMindDBEnv LATITUDE CITY_DB/location/latitude
+ 
+  MaxMindDBNetworkEnv CITY_DB CITY_DB_NETWORK
+</IfModule>
+
+
+# Test code blocks #
+
+.htaccess
+
+#rewrite any NY source 
+ 
+<IfModule mod_maxminddb.c>
+RewriteEngine on
+RewriteCond %{ENV:MM_STATE} ^(NY)$
+RewriteRule ^(.*)$ https://www.defendonlineprivacy.com/ny [L]
+</IfModule>
+
+
+location.php
+
+<?php
+ 
+print_r( $_SERVER );
+ 
+  $ipAddress = $_SERVER['REMOTE_ADDR']; // Get the client's IP address
+  $countryCode = $_SERVER['COUNTRY_CODE'];
+  $countryName = $_SERVER['COUNTRY_NAME'];
+  $regionCode = $_SERVER['REGION_CODE'];
+  $regionName = $_SERVER['REGION_NAME'] ?? 'Region not available';
+ 
+  if ($countryCode === 'US') {
+    echo "Visitor is from the United States.<br>";
+    // Further logic based on US state codes can be added here.
+    if ($regionCode === 'CA') {
+      echo "The visitor is in California.<br>";
+    }
+  }
+ 
+  echo "IP Address: " . $ipAddress . "<br>" ."\n";
+  echo "Country Code: " . $countryCode . "<br>" ."\n";
+  echo "Country Name: " . $countryName . "<br>" ."\n";
+  echo "Region Code: " . $regionCode . "<br>" ."\n";
+  echo "Region Name: " . htmlspecialchars($regionName) . "<br>" ."\n";
+ 
+?>
+
+
+
+Note , if geoip is installed and loaded, oftentimes it can conflict with maxmind. if this is the case, disable geoip module.
