@@ -1,5 +1,17 @@
-# repo
-Dump of scripts and code
+# Scripts Repository
 
-# asuswrtovpnclientqc
-One-liner for asus-wrt to quickly change openvpn clients for devices via ssh using openconnect ssh client
+Collection of useful scripts and notes.
+
+## Scripts
+
+### asuswrtovpnclientqc
+One-liner for ASUS-WRT to quickly change OpenVPN clients for devices via SSH using OpenConnect SSH client.
+
+./asuswrtovpnclientqc
+
+---
+
+### maxminddbinstall
+Guide and commands for installing and configuring MaxMindDB.
+
+./maxminddbinstall
